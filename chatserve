@@ -9,9 +9,9 @@ import sys
 s = socket.socket()
 print s
 
-host = socket.gethostname()
-#host = "127.0.0.1"
-print host
+#host = socket.gethostname()
+host = "127.0.0.1"
+
 
 # get a port number
 #port = 50050
