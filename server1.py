@@ -27,5 +27,7 @@ while True:
  c, addr = s.accept()
  print 'got a connection', addr
  c.send("got a connection")
- c.close()
+
+
+c.close()
 
