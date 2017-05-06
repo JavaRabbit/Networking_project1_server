@@ -29,17 +29,22 @@ s.bind((host, port))
 s.listen(5)
 
 # take out this line from while loop
-#c, addr = s.accept()
+connection, addr = s.accept()
 
 while True:
- c, addr = s.accept()
-  
+ #connection, addr = s.accept()
+ 
+ # get what the client entered
+ msg = connection.recv(4096)
+ print msg
+
  # get string from user
  response = raw_input("Enter a reply to client:")
  
  #print 'got a connection', addr
  #c.send("got a connection")
- c.send(response)
+ connection.send(response)
  
-c.close()
+
+connection.close()
 
