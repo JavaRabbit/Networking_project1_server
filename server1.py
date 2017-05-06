@@ -4,6 +4,11 @@
 import socket
 import sys
 
+# if no port number is given, show usage and exit
+if len(sys.argv) != 2:
+  print "Usage: ./chatserve <portnumber>"
+  exit(1)
+
 #create socket object
 # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s = socket.socket()
