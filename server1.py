@@ -21,7 +21,7 @@ print host
 # get a port number
 #port = 50050
 port = int(sys.argv[1])
-print sys.argv[1] + " is the port to use"
+# print sys.argv[1] + " is the port to use"
 
 # bind to the port
 s.bind((host, port))
@@ -30,21 +30,33 @@ s.listen(5)
 
 # take out this line from while loop
 connection, addr = s.accept()
+print 'Connection from', addr[0]
 
 while True:
  #connection, addr = s.accept()
  
  # get what the client entered
  msg = connection.recv(4096)
+ # if the msg is quit, it means that client is going to close connectoin
+ if msg == "quit\n":
+  print "client is quiting"
+
  print msg
+ 
+
 
  # get string from user
  response = raw_input("Enter a reply to client:")
  
  #print 'got a connection', addr
  #c.send("got a connection")
- connection.send(response)
- 
+ try:
+  n = connection.send(response)
+  print n
+ except socket.error:
+  print "you have an error sending. conn is broken"
+  sys.exit(1)
+ # seems like if n equals 0, it could not send, so connection closed (with quit):
 
 connection.close()
 
