@@ -45,7 +45,7 @@ while True:
    msg = connection.recv(4096)
    # if the msg is quit, it means that client is going to close connectoin
    if msg == "quit\n":
-    print "client is quiting"
+    print "Client has decided to terminate connection. This connection will now close.\n"
     break  # creak out of while loop. 
    print msg
    # get string from user
