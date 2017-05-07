@@ -8,3 +8,7 @@ Usage for server is:
 
 example:
 ./chatserve 55500
+
+
+Notes: 
+server is written in Python 2.7
