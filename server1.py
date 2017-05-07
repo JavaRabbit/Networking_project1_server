@@ -51,11 +51,17 @@ while True:
    # get string from user
    response = raw_input("Enter a reply to client:")
  
-   #print 'got a connection', addr
-   #c.send("got a connection")
+   # if input from user is "quit", close this connection
+   if(response == "quit"):
+     print "you want to quit?"
+
    try:
     n = connection.send(response)
-    print n
+    # print n
+    # if server user decides to quit, send message to client, then close this connection
+    if(response == "quit"):
+      connection.close()
+      break  # break out of this loop to wait for new connection
    except socket.error:
     print "you have an error sending. conn is broken"
     sys.exit(1)
