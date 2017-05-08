@@ -13,10 +13,18 @@
 # import the socket module
 import socket
 import sys
+import signal
+import time
+import os
 
 # global variable socket
 s = socket.socket()
 
+##############################
+# Function to handle sigint 
+def sigint_handler(signum, frame):
+ print "Thanks for using the server. Good bye"
+ exit(0)
 
 ####################################
 # Function to verify that command line arguments are correct
@@ -59,6 +67,10 @@ def getHandle():
 #
 ####################################
 def chat():
+  
+  # for the sigint handler
+  signal.signal(signal.SIGINT, sigint_handler)
+  
   # first while loop surrounds listem
   while True:
     s.listen(5)
