@@ -23,7 +23,7 @@ s = socket.socket()
 ##############################
 # Function to handle sigint 
 def sigint_handler(signum, frame):
- print "Thanks for using the server. Good bye"
+ print "\nThanks for using the server. Good bye\n"
  exit(0)
 
 ####################################
@@ -51,7 +51,7 @@ def initializeConnection():
 ################################
 # Get a handle form the user
 def getHandle():
-  serverHandle = raw_input("Enter a handle name for this server:")
+  serverHandle = raw_input("\nEnter a handle name for this server:")
   global fullHandle 
   fullHandle = serverHandle + " >" 
 
@@ -75,11 +75,11 @@ def chat():
   while True:
     s.listen(5)
 
-    print "Listening for a new connection..."
+    print "\nListening for a new connection..."
 
     # accept a new connection from client
     connection, addr = s.accept()
-    print 'Connection from', addr[0]
+    print "\nConnection from", addr[0]
 
     while True:
  
@@ -87,7 +87,7 @@ def chat():
      msg = connection.recv(4096)
      # if the msg is quit, it means that client is going to close connectoin
      if msg == "quit\n":
-      print "Client has decided to terminate connection. This connection will now close.\n"
+      print "\nClient has decided to terminate connection. This connection will now close.\n"
       break  # creak out of while loop. 
    
      #  else the client did not want to quit, so get a response from the server`
@@ -103,7 +103,7 @@ def chat():
       # if server user decides to quit, send message to client, then close this connection
       if(response == "quit"):
         connection.close()
-        print "Now closing this connection\n"
+        print "\nNow closing this connection\n"
         break  # break out of this loop to wait for new connection
      except socket.error:
       print "you have an error sending. conn is broken"

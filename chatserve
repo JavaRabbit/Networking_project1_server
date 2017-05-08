@@ -1,71 +1,125 @@
 #!/bin/python
 
+# Project: Project 1 Networking CS 375
+# Program:  Chat Server 
+# Language: Python 2.7
+# Author: Bonnie Kwong
+# Description: a python chat server capable of 
+# chatting with a client
+# Date: May 7, 2017
+
+
+
 # import the socket module
 import socket
 import sys
+import signal
+import time
+import os
 
-# if no port number is given, show usage and exit
-if len(sys.argv) != 2:
-  print "Usage: ./chatserve <portnumber>"
-  exit(1)
-
-#create socket object
-# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# global variable socket
 s = socket.socket()
-print s
 
-host = socket.gethostname()
-#host = "127.0.0.1"
-print host
+##############################
+# Function to handle sigint 
+def sigint_handler(signum, frame):
+  print "\nThanks for using the server. Good bye\n"
+  exit(0)
 
-# get a port number
-#port = 50050
-port = int(sys.argv[1])
-# print sys.argv[1] + " is the port to use"
+####################################
+# Function to verify that command line arguments are correct
+def verifyNumArguments():
+  # if no port number is given, show usage and exit
+  if len(sys.argv) != 2:
+    print "Usage: ./chatserve <portnumber>"
+    exit(1)
 
-# bind to the port
-s.bind((host, port))
+####################################
+# Function to initialize socket connection
+def initializeConnection():
+
+  host = socket.gethostname()
+  print host
+
+  # get a port number
+  port = int(sys.argv[1])
+
+  # bind to the port
+  s.bind((host, port))
 
 
-# first while loop surrounds listem
-while True:
-  s.listen(5)
+################################
+# Get a handle form the user
+def getHandle():
+  serverHandle = raw_input("\nEnter a handle name for this server:")
+  global fullHandle 
+  fullHandle = serverHandle + " >" 
 
-  print "Listening for a new connection..."
 
 
-  # take out this line from while loop
-  connection, addr = s.accept()
-  print 'Connection from', addr[0]
-
+###################################
+#  chat function runs a while loop to 
+#  receive and send messages to clients
+#  the outer while loop listens for connections
+# thus if a connection terminates
+# it is able to use the same socket
+# to connect to new connections
+#
+####################################
+def chat():
+  
+  # for the sigint handler
+  signal.signal(signal.SIGINT, sigint_handler)
+  
+  # first while loop surrounds listem
   while True:
-   #connection, addr = s.accept()
- 
-   #  get what the client entered
-   msg = connection.recv(4096)
-   # if the msg is quit, it means that client is going to close connectoin
-   if msg == "quit\n":
-    print "Client has decided to terminate connection. This connection will now close.\n"
-    break  # creak out of while loop. 
-   print msg
-   # get string from user
-   response = raw_input("Enter a reply to client:")
- 
-   # if input from user is "quit", close this connection
-   if(response == "quit"):
-     print "you want to quit?"
+    s.listen(5)
 
-   try:
-    n = connection.send(response)
-    # print n
-    # if server user decides to quit, send message to client, then close this connection
-    if(response == "quit"):
-      connection.close()
-      break  # break out of this loop to wait for new connection
-   except socket.error:
-    print "you have an error sending. conn is broken"
-    sys.exit(1)
-   # seems like if n equals 0, it could not send, so connection closed (with quit):
+    print "\nListening for a new connection..."
 
-connection.close()
+    # accept a new connection from client
+    connection, addr = s.accept()
+    print "\nConnection from", addr[0]
+
+    while True:
+ 
+     #  get what the client entered
+     msg = connection.recv(4096)
+     # if the msg is quit, it means that client is going to close connectoin
+     if msg == "quit\n":
+       print "\nClient has decided to terminate connection. This connection will now close.\n"
+       break  # creak out of while loop. 
+   
+     #  else the client did not want to quit, so get a response from the server`
+     print msg
+     # get string from user on server side
+     response = raw_input(fullHandle)
+ 
+     # enclose the send method in a try exception, in case there is
+     # a socket error
+     try:
+       n = connection.send(fullHandle + response  )
+    
+       # if server user decides to quit, send message to client, then close this connection
+       if(response == "quit"):
+         connection.close()
+         print "\nNow closing this connection\n"
+         break  # break out of this loop to wait for new connection
+     except socket.error:
+        print "you have an error sending. conn is broken"
+        sys.exit(1)
+
+  connection.close()
+
+# verify user entered correctnumber of arguments
+verifyNumArguments()
+
+# get a handle from the user
+getHandle()
+
+# initialize socket
+initializeConnection()
+
+# call the chat function to call chat method
+chat()
 
